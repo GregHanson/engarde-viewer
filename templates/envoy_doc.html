@@ -1,0 +1,26 @@
+{{if .Header}}
+<h2>{{ .Header }}</h2>
+    <h3>Format</h3>
+        <p>{{ .Name }}</p>
+{{else}}
+<h2>{{ .Name }}</h2>
+{{end}}
+    {{if .Description }}    
+    <h3>Description</h3>
+        <p>{{ .Description }}</p>
+    {{end}}
+
+    {{if .Http }}
+    <h3>HTTP</h3>
+        <p>{{ .Http }}</p>
+    {{end}}
+
+    {{if .Tcp }}
+    <h3>TCP</h3>
+        <p>{{ .Tcp }}</p>
+    {{end}}
+
+    {{if .Note }}
+    <h3>Note</h3>
+        <p>{{ .Note }}</p>
+    {{end}}
