@@ -1,7 +1,7 @@
 body {
     font-family: Arial;
     background-color: #5a5a5a;
-  }
+}
   
 .top {
     height: 15%;
@@ -55,6 +55,7 @@ textarea {
     text-indent: 20px;
     display:inline-block;
 }
+
 .valueText {
     color: #cccccc;
 }

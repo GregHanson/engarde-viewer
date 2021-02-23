@@ -79,10 +79,12 @@ func docs(w http.ResponseWriter, r *http.Request) {
 func update(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	if len(r.Form["message"]) != 1 {
+		mainPage(w, r)
 		return
 	}
 	rawLog := r.Form["message"][0]
 	if rawLog == "" {
+		mainPage(w, r)
 		return
 	}
 	pageData.AccessLog = rawLog
@@ -93,20 +95,23 @@ func update(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func mainPage(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/main.html"))
+	pageData = ViewerPageData{
+		AccessLog:  "",
+		ParesedLog: nil,
+	}
+	tmpl.Execute(w, pageData)
+}
+
 func main() {
 
 	parseEnvoyDocs()
 
-	tmpl := template.Must(template.ParseFiles("templates/main.html"))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		pageData = ViewerPageData{
-			AccessLog:  "",
-			ParesedLog: nil,
-		}
-		tmpl.Execute(w, pageData)
-	})
+	http.HandleFunc("/", mainPage)
 	http.HandleFunc("/update", update)
 	http.HandleFunc("/docs", docs)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	fmt.Println("starting server on port 9090 . . . ")
 
