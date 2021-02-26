@@ -87,8 +87,10 @@ func update(w http.ResponseWriter, r *http.Request) {
 		mainPage(w, r)
 		return
 	}
+
+	useIstio := r.FormValue("use_istio") == "on"
 	pageData.AccessLog = rawLog
-	pageData.ParesedLog = parseAccessLog(fmt.Sprintf("%s", rawLog), true)
+	pageData.ParesedLog = parseAccessLog(fmt.Sprintf("%s", rawLog), useIstio)
 	tmpl := template.Must(template.ParseFiles("templates/main.html"))
 	if err := tmpl.Execute(w, pageData); err != nil {
 		fmt.Println(err)
