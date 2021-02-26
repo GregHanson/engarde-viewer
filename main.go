@@ -283,9 +283,10 @@ func parseID(id string) (key, header string) {
 	case "user_agent":
 		key = "%REQ(X?Y):Z%"
 		header = "%REQ(USER-AGENT)%"
-	case "mixer_status":
-		key = "%DYNAMIC_METADATA(NAMESPACE:KEY*):Z%"
-		header = "%DYNAMIC_METADATA(mixer:status)%"
+	case "response_details":
+		key = "%RESPONSE_CODE_DETAILS%"
+	case "termination_details":
+		key = "%CONNECTION_TERMINATION_DETAILS%"
 	}
 	return key, header
 }

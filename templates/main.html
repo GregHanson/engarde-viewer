@@ -54,6 +54,11 @@
                 <span class="keyText">bytes_sent:</span>&nbsp;<span class="valueText">{{.ParesedLog.BytesSent}},</span></br>
             </div>
             {{end}}
+            {{if .ParesedLog.ConnectionTerminationDetails}}
+            <div id="termination_details" onClick="reply_click(this.id)">
+                <span class="keyText">connection_termination_details:</span>&nbsp;<span class="valueText">{{.ParesedLog.ConnectionTerminationDetails}},</span></br>
+            </div>
+            {{end}}
             {{if .ParesedLog.Duration}}
             <div id="duration" onClick="reply_click(this.id)">
                 <span class="keyText">duration:</span>&nbsp;<span class="valueText">{{.ParesedLog.Duration}},</span></br>
@@ -82,6 +87,11 @@
             {{if .ParesedLog.ResponseFlags}}
             <div id="response_flags" onClick="reply_click(this.id)">
                 <span class="keyText">response_flags:</span>&nbsp;<span class="valueText">{{.ParesedLog.ResponseFlags}},</span></br>
+            </div>
+            {{end}}
+            {{if .ParesedLog.ResponseCodeDetails}}
+            <div id="response_details" onClick="reply_click(this.id)">
+                <span class="keyText">response_code_details:</span>&nbsp;<span class="valueText">{{.ParesedLog.ResponseCodeDetails}},</span></br>
             </div>
             {{end}}
             {{if .ParesedLog.StatusCode}}
@@ -147,11 +157,6 @@
             {{if .ParesedLog.UserAgent}}
             <div id="user_agent" onClick="reply_click(this.id)">
                 <span class="keyText">user_agent:</span>&nbsp;<span class="valueText">{{.ParesedLog.UserAgent}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.MixerStatus}}
-            <div id="mixer_status" onClick="reply_click(this.id)">
-                <span class="keyText">mixer_status:</span>&nbsp;<span class="valueText">{{.ParesedLog.MixerStatus}},</span></br>
             </div>
             {{end}}
             {{if .ParesedLog.OriginalMessage}}
