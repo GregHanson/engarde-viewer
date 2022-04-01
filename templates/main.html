@@ -74,6 +74,11 @@
                 <span class="keyText">method:</span>&nbsp;<span class="valueText">{{.ParesedLog.Method}},</span></br>
             </div>
             {{end}}
+            {{if .ParesedLog.RouteName}}
+            <div id="route_name" onClick="reply_click(this.id)">
+                <span class="keyText">route_name:</span>&nbsp;<span class="valueText">{{.ParesedLog.RouteName}},</span></br>
+            </div>
+            {{end}}
             {{if .ParesedLog.Protocol}}
             <div id="protocol" onClick="reply_click(this.id)">
                 <span class="keyText">protocol:</span>&nbsp;<span class="valueText">{{.ParesedLog.Protocol}},</span></br>

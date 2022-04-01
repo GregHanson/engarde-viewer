@@ -82,7 +82,7 @@ func update(w http.ResponseWriter, r *http.Request) {
 		mainPage(w, r)
 		return
 	}
-	rawLog := r.Form["message"][0]
+	rawLog := parseInput(r.Form["message"][0])
 	if rawLog == "" {
 		mainPage(w, r)
 		return
@@ -118,6 +118,14 @@ func main() {
 	fmt.Println("starting server on port 9090 . . . ")
 
 	http.ListenAndServe(":9090", nil)
+}
+
+func parseInput(input string) (retval string) {
+	retval = strings.TrimSpace(input)
+	retval = strings.ReplaceAll(retval, "\n", "")
+	retval = strings.ReplaceAll(retval, "\r", "")
+
+	return retval
 }
 
 func parseEnvoyDocs() {
@@ -285,6 +293,8 @@ func parseID(id string) (key, header string) {
 		header = "%REQ(USER-AGENT)%"
 	case "response_details":
 		key = "%RESPONSE_CODE_DETAILS%"
+	case "route_name":
+		key = "%ROUTE_NAME%"
 	case "termination_details":
 		key = "%CONNECTION_TERMINATION_DETAILS%"
 	}
