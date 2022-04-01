@@ -15,9 +15,24 @@
         <p>{{ .Http }}</p>
     {{end}}
 
+    {{if .HttpAndTcp }}
+    <h3>HTTP/TCP</h3>
+        <p>{{ .HttpAndTcp }}</p>
+    {{end}}
+
     {{if .Tcp }}
     <h3>TCP</h3>
         <p>{{ .Tcp }}</p>
+    {{end}}
+
+    {{if .Udp }}
+    <h3>UDP</h3>
+        <p>{{ .Udp }}</p>
+    {{end}}
+
+    {{if .TcpAndUdp }}
+    <h3>TCP/UDP</h3>
+        <p>{{ .TcpAndUdp }}</p>
     {{end}}
 
     {{if .Note }}

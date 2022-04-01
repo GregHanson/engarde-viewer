@@ -11,12 +11,38 @@ import (
 	"istio.io/pkg/log"
 )
 
+// switch state {
+// case "http":
+// 	e.Http = updateDescription(e.Http, descr)
+// case "tcp":
+// 	e.Tcp = updateDescription(e.Tcp, descr)
+// case "udp":
+// 	e.Udp = updateDescription(e.Udp, descr)
+// case "note":
+// 	e.Note = updateDescription(e.Note, descr)
+// case "description":
+// 	e.Description = updateDescription(e.Description, descr)
+// }
+
+const (
+	Http       int = 0
+	Tcp            = 1
+	Udp            = 2
+	Note           = 3
+	Desc           = 4
+	HttpAndTcp     = 5
+	TcpAndUdp      = 6
+)
+
 type Entry struct {
 	Name        string
 	Description string
 	Http        string
 	Tcp         string
+	Udp         string
 	Note        string
+	HttpAndTcp  string
+	TcpAndUdp   string
 }
 
 type ResponseFlag struct {
@@ -141,7 +167,7 @@ func parseEnvoyDocs() {
 		firstItem := false
 		var currEntry *Entry
 		init := false
-		state := ""
+		state := -1
 		for scanner.Scan() {
 			text := scanner.Text()
 			if strings.Index(text, "%") == 0 {
@@ -166,21 +192,33 @@ func parseEnvoyDocs() {
 				}
 
 				if trimmed == "HTTP" {
-					state = "http"
+					state = Http
 					scanner.Scan()
 					trimmed = strings.Trim(scanner.Text(), " ")
 				} else if trimmed == "TCP" {
-					state = "tcp"
+					state = Tcp
+					scanner.Scan()
+					trimmed = strings.Trim(scanner.Text(), " ")
+				} else if trimmed == "UDP" {
+					state = Udp
+					scanner.Scan()
+					trimmed = strings.Trim(scanner.Text(), " ")
+				} else if trimmed == "TCP/UDP" {
+					state = TcpAndUdp
+					scanner.Scan()
+					trimmed = strings.Trim(scanner.Text(), " ")
+				} else if trimmed == "HTTP/TCP" || trimmed == "HTTP and TCP" {
+					state = HttpAndTcp
 					scanner.Scan()
 					trimmed = strings.Trim(scanner.Text(), " ")
 				} else if trimmed == ".. note::" {
-					state = "note"
+					state = Note
 					scanner.Scan()
 					trimmed = strings.Trim(scanner.Text(), " ")
 				} else if strings.HasPrefix(trimmed, ".. _") {
 					continue
 				} else if ((len(scanner.Text()) - len(trimmed)) / indent) == 1 {
-					state = "description"
+					state = Desc
 				}
 				if currEntry.Name == "%RESPONSE_FLAGS%" {
 					addResponseFlag(trimmed)
@@ -191,15 +229,21 @@ func parseEnvoyDocs() {
 	}
 }
 
-func updateEntry(descr, state string, e *Entry) {
+func updateEntry(descr string, state int, e *Entry) {
 	switch state {
-	case "http":
+	case Http:
 		e.Http = updateDescription(e.Http, descr)
-	case "tcp":
+	case Tcp:
 		e.Tcp = updateDescription(e.Tcp, descr)
-	case "note":
+	case Udp:
+		e.Udp = updateDescription(e.Udp, descr)
+	case TcpAndUdp:
+		e.TcpAndUdp = updateDescription(e.TcpAndUdp, descr)
+	case HttpAndTcp:
+		e.HttpAndTcp = updateDescription(e.HttpAndTcp, descr)
+	case Note:
 		e.Note = updateDescription(e.Note, descr)
-	case "description":
+	case Desc:
 		e.Description = updateDescription(e.Description, descr)
 	}
 }
