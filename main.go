@@ -11,19 +11,6 @@ import (
 	"istio.io/pkg/log"
 )
 
-// switch state {
-// case "http":
-// 	e.Http = updateDescription(e.Http, descr)
-// case "tcp":
-// 	e.Tcp = updateDescription(e.Tcp, descr)
-// case "udp":
-// 	e.Udp = updateDescription(e.Udp, descr)
-// case "note":
-// 	e.Note = updateDescription(e.Note, descr)
-// case "description":
-// 	e.Description = updateDescription(e.Description, descr)
-// }
-
 const (
 	Http       int = 0
 	Tcp            = 1
@@ -227,6 +214,18 @@ func parseEnvoyDocs() {
 			}
 		}
 	}
+	for _, entry := range entries {
+		entry.Description = fixDocLinks(entry.Description)
+		entry.Http = fixDocLinks(entry.Http)
+		entry.Tcp = fixDocLinks(entry.Tcp)
+		entry.HttpAndTcp = fixDocLinks(entry.HttpAndTcp)
+		entry.TcpAndUdp = fixDocLinks(entry.TcpAndUdp)
+		entry.Udp = fixDocLinks(entry.Udp)
+		entry.Note = fixDocLinks(entry.Note)
+	}
+	for i := range responseFlags {
+		responseFlags[i].Description = fixDocLinks(responseFlags[i].Description)
+	}
 }
 
 func updateEntry(descr string, state int, e *Entry) {
@@ -343,4 +342,28 @@ func parseID(id string) (key, header string) {
 		key = "%CONNECTION_TERMINATION_DETAILS%"
 	}
 	return key, header
+}
+
+func fixDocLinks(rawText string) string {
+	retval := rawText
+	for strings.Contains(retval, ":ref:") {
+		retval = removeDocLink(retval)
+	}
+	return retval
+}
+
+func removeDocLink(ref string) string {
+	start := strings.Index(ref, ":ref:`")
+	retval := strings.Replace(ref, ":ref:`", "", 1)
+	left, right := 0, 0
+	for i := start; i < len(retval); i++ {
+		c := retval[i : i+1]
+		if c == "<" {
+			left = i
+		} else if c == ">" {
+			right = i + 1
+			break
+		}
+	}
+	return retval[:left] + retval[right+1:]
 }
