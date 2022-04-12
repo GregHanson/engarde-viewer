@@ -17,3 +17,6 @@
     color: #cccccc;
 }
 
+.docs {
+    overflow-wrap: anywhere;
+}
