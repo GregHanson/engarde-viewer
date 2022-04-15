@@ -18,6 +18,9 @@
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("docs").innerHTML = this.responseText;
                     document.getElementById("docs").style.display = "block";
+                    document.getElementById("placeholder").style.display = "none";
+                } else {
+                    document.getElementById("placeholder").style.display = "visible";
                 }
             };
             xhttp.open("GET", "/docs?id=" + clicked_id, true);
@@ -236,7 +239,7 @@
                 <div class="card-body">
                     <div id="docs" class="docs" style="display:none">
                     </div>
-                    Click on a field to view the documentaion.
+                    <div id="placeholder" style="display:visible">Click on a field to view the documentaion.</div>
                 </div>
               </div>
         </div>
