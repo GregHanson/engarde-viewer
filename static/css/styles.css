@@ -1,20 +1,12 @@
-.boxes {
-    background-color: #404040;
-    padding: 10px 10px 10px 10px;
-}
 
 .keyText {
-    color: #dda9d8;
     text-indent: 20px;
     display:inline-block;
+    font-weight: bold
 }
 
 .replyClick:hover {
     cursor: pointer;
-}
-
-.valueText {
-    color: #cccccc;
 }
 
 .docs {

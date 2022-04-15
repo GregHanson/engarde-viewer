@@ -58,8 +58,9 @@
 
             <h2>Engarde Output <a href="https://github.com/nitishm/engarde"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></h2>
             {{if .ParesedLog }}
-            <div class="boxes">
-                <span style="color:#ffffff">{</span></br>
+                <div class="card">
+                <div class="card-body">
+                <span>}</span>
                 {{if .ParesedLog.Authority}}
                 <div id="authority" class="replyClick" onClick="reply_click(this.id)">
                     <span class="keyText">authority:</span>&nbsp;<span
@@ -220,8 +221,9 @@
                 <span class="keyText">parse_error:</span>&nbsp;<span
                     class="valueText">{{.ParesedLog.ParseError}},</span></br>
                 {{end}}
-                <span style="color:#ffffff">}</span>
-            </div>
+                <span>}</span>
+                </div>
+                </div>
             {{end}}
 
         </div>

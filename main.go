@@ -135,6 +135,8 @@ func main() {
 
 func parseInput(input string) (retval string) {
 	retval = strings.TrimSpace(input)
+	retval = strings.ReplaceAll(retval, "\n ", "")
+	retval = strings.ReplaceAll(retval, "\r ", "")
 	retval = strings.ReplaceAll(retval, "\n", "")
 	retval = strings.ReplaceAll(retval, "\r", "")
 
@@ -226,6 +228,10 @@ func parseEnvoyDocs() {
 	for i := range responseFlags {
 		responseFlags[i].Description = fixDocLinks(responseFlags[i].Description)
 	}
+
+	// just doesn't display properly
+	entries["%START_TIME%"].Description = ""
+
 }
 
 func updateEntry(descr string, state int, e *Entry) {
@@ -258,7 +264,7 @@ func addResponseFlag(flag string) {
 	if strings.HasPrefix(flag, "* **") {
 		elements := strings.Split(flag, "**")
 		name := elements[1]
-		description := elements[2]
+		description := elements[2][2:]
 		responseFlags = append(responseFlags, ResponseFlag{Name: name, Description: description})
 	}
 }
