@@ -1,188 +1,246 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+
     <script>
-      function reply_click(clicked_id) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("docs").innerHTML = this.responseText;
-            document.getElementById("docs").style.display = "block";
-          }
-        };
-        xhttp.open("GET", "/docs?id="+clicked_id, true);
-        xhttp.send();
-      }
+        function reply_click(clicked_id) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("docs").innerHTML = this.responseText;
+                    document.getElementById("docs").style.display = "block";
+                }
+            };
+            xhttp.open("GET", "/docs?id=" + clicked_id, true);
+            xhttp.send();
+        }
     </script>
-  </head>
+</head>
+
 <body>
+    <div class="container">
+        <div class="bg-light p-5 rounded mt-3">
+        <h1>
+            Engarde Viewer
+        </h1>
+        <div class="" >
+            <form action="/update">
+                <div class="mb-3">
+                    <label for="message" class="form-label">Enter an access log line:</label>
+                    <textarea class="form-control" id="message" rows="3" name="message"
+                        placeholder="Paste access log here...">{{.AccessLog}}</textarea>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="use_istio" id="use_istio" checked>
+                    <label class="form-check-label" for="use_istio">Use Istio</label>
+                </div>
+                <div class="col-12">
+                    <input type="submit" class="btn btn-primary" id="access_log_submit" name="access_log_submit"
+                        value="Process" />
+                </div>
 
-<div class="top">
-    <form action="/update">
-        <textarea id="message" name="message" placeholder="Paste access log here...">{{.AccessLog}}</textarea>
-        <div>
-            <span class="input-group-addon">
-              <input type="submit" class="btn btn-fill btn-info pull-left" id="access_log_submit" name="access_log_submit" value="Process"/>
-            </span>
-            <span class="input-group-addon">
-              <input type="checkbox" name="use_istio" id="use_istio" checked>
-            </span>
-            <label for="use_istio" style="color: #ffffff"> Use Istio</label>
-        </div>
-    </form>
-</div>
-
-<div class="split left">
-    <h2><a href="https://github.com/nitishm/engarde">Engarde Output:</a></h2>
-    {{if .ParesedLog }}
-    <div class="boxes">
-    <span style="color:#ffffff">{</span></br>
-            {{if .ParesedLog.Authority}}
-            <div id="authority" onClick="reply_click(this.id)">
-                <span class="keyText">authority:</span>&nbsp;<span class="valueText">"{{.ParesedLog.Authority}}",</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.BytesReceived}}
-            <div id="bytes_received" onClick="reply_click(this.id)">
-                <span class="keyText">bytes_received:</span>&nbsp;<span class="valueText">{{.ParesedLog.BytesReceived}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.BytesSent}}
-            <div id="bytes_sent" onClick="reply_click(this.id)">
-                <span class="keyText">bytes_sent:</span>&nbsp;<span class="valueText">{{.ParesedLog.BytesSent}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.ConnectionTerminationDetails}}
-            <div id="termination_details" onClick="reply_click(this.id)">
-                <span class="keyText">connection_termination_details:</span>&nbsp;<span class="valueText">{{.ParesedLog.ConnectionTerminationDetails}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.Duration}}
-            <div id="duration" onClick="reply_click(this.id)">
-                <span class="keyText">duration:</span>&nbsp;<span class="valueText">{{.ParesedLog.Duration}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.ForwardedFor}}
-            <div id="forwarded_for" onClick="reply_click(this.id)">
-                <span class="keyText">forwarded_for:</span>&nbsp;<span class="valueText">{{.ParesedLog.ForwardedFor}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.Method}}
-            <div id="method" onClick="reply_click(this.id)">
-                <span class="keyText">method:</span>&nbsp;<span class="valueText">{{.ParesedLog.Method}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.RouteName}}
-            <div id="route_name" onClick="reply_click(this.id)">
-                <span class="keyText">route_name:</span>&nbsp;<span class="valueText">{{.ParesedLog.RouteName}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.Protocol}}
-            <div id="protocol" onClick="reply_click(this.id)">
-                <span class="keyText">protocol:</span>&nbsp;<span class="valueText">{{.ParesedLog.Protocol}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.RequestId}}
-            <div id="request_id" onClick="reply_click(this.id)">
-                <span class="keyText">request_id:</span>&nbsp;<span class="valueText">{{.ParesedLog.RequestId}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.ResponseFlags}}
-            <div id="response_flags" onClick="reply_click(this.id)">
-                <span class="keyText">response_flags:</span>&nbsp;<span class="valueText">{{.ParesedLog.ResponseFlags}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.ResponseCodeDetails}}
-            <div id="response_details" onClick="reply_click(this.id)">
-                <span class="keyText">response_code_details:</span>&nbsp;<span class="valueText">{{.ParesedLog.ResponseCodeDetails}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.StatusCode}}
-            <div id="status_code" onClick="reply_click(this.id)">
-                <span class="keyText">status_code:</span>&nbsp;<span class="valueText">{{.ParesedLog.StatusCode}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.TcpServiceTime}}
-            <div id="tcp_service_time" onClick="reply_click(this.id)">
-                <span class="keyText">tcp_service_time:</span>&nbsp;<span class="valueText">{{.ParesedLog.TcpServiceTime}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.Timestamp}}
-            <div id="timestamp" onClick="reply_click(this.id)">
-                <span class="keyText">timestamp:</span>&nbsp;<span class="valueText">{{.ParesedLog.Timestamp}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UpstreamService}}
-            <div id="upstream_service" onClick="reply_click(this.id)">
-                <span class="keyText">upstream_service:</span>&nbsp;<span class="valueText">{{.ParesedLog.UpstreamService}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UpstreamServiceTime}}
-            <div id="upstream_service_time" onClick="reply_click(this.id)">
-                <span class="keyText">upstream_service_time:</span>&nbsp;<span class="valueText">{{.ParesedLog.UpstreamServiceTime}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UpstreamCluster}}
-            <div id="upstream_cluster" onClick="reply_click(this.id)">
-                <span class="keyText">upstream_cluster:</span>&nbsp;<span class="valueText">{{.ParesedLog.UpstreamCluster}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UpstreamLocal}}
-            <div id="upstream_local" onClick="reply_click(this.id)">
-                <span class="keyText">upstream_local:</span>&nbsp;<span class="valueText">{{.ParesedLog.UpstreamLocal}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.DownstreamLocal}}
-            <div id="downstream_local" onClick="reply_click(this.id)">
-                <span class="keyText">downstream_local:</span>&nbsp;<span class="valueText">{{.ParesedLog.DownstreamLocal}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.DownstreamRemote}}
-            <div id="downstream_remote" onClick="reply_click(this.id)">
-                <span class="keyText">downstream_remote:</span>&nbsp;<span class="valueText">{{.ParesedLog.DownstreamRemote}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.RequestedServer}}
-            <div id="requested_server" onClick="reply_click(this.id)">
-                <span class="keyText">requested_server:</span>&nbsp;<span class="valueText">{{.ParesedLog.RequestedServer}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UriParam}}
-            <div id="uri_param" onClick="reply_click(this.id)">
-                <span class="keyText">uri_param:</span>&nbsp;<span class="valueText">{{.ParesedLog.UriParam}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UriPath}}
-            <div id="uri_path" onClick="reply_click(this.id)">
-                <span class="keyText">uri_path:</span>&nbsp;<span class="valueText">{{.ParesedLog.UriPath}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.UserAgent}}
-            <div id="user_agent" onClick="reply_click(this.id)">
-                <span class="keyText">user_agent:</span>&nbsp;<span class="valueText">{{.ParesedLog.UserAgent}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.OriginalMessage}}
-            <div id="original_message">
-                <span class="keyText">original_message:</span>&nbsp;<span class="valueText">{{.ParesedLog.OriginalMessage}},</span></br>
-            </div>
-            {{end}}
-            {{if .ParesedLog.ParseError}}
-            <span class="keyText">parse_error:</span>&nbsp;<span class="valueText">{{.ParesedLog.ParseError}},</span></br>
-            {{end}}
-    <span style="color:#ffffff">}</span>
+        </form>
     </div>
-    {{end}}
 </div>
+        <hr>
+    <div class="row">
+        <div class="col">
 
-<div class="split right">
-  <h2><a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators">Envoy Documentation:</a></h2>
-  <div id="docs" class="boxes" style="display:none">
-  </div>
-</div>
-     
+
+            <h2>Engarde Output <a href="https://github.com/nitishm/engarde"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></h2>
+            {{if .ParesedLog }}
+            <div class="boxes">
+                <span style="color:#ffffff">{</span></br>
+                {{if .ParesedLog.Authority}}
+                <div id="authority" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">authority:</span>&nbsp;<span
+                        class="valueText">"{{.ParesedLog.Authority}}",</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.BytesReceived}}
+                <div id="bytes_received" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">bytes_received:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.BytesReceived}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.BytesSent}}
+                <div id="bytes_sent" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">bytes_sent:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.BytesSent}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.ConnectionTerminationDetails}}
+                <div id="termination_details" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">connection_termination_details:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.ConnectionTerminationDetails}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.Duration}}
+                <div id="duration" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">duration:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.Duration}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.ForwardedFor}}
+                <div id="forwarded_for" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">forwarded_for:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.ForwardedFor}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.Method}}
+                <div id="method" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">method:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.Method}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.RouteName}}
+                <div id="route_name" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">route_name:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.RouteName}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.Protocol}}
+                <div id="protocol" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">protocol:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.Protocol}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.RequestId}}
+                <div id="request_id" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">request_id:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.RequestId}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.ResponseFlags}}
+                <div id="response_flags" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">response_flags:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.ResponseFlags}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.ResponseCodeDetails}}
+                <div id="response_details" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">response_code_details:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.ResponseCodeDetails}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.StatusCode}}
+                <div id="status_code" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">status_code:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.StatusCode}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.TcpServiceTime}}
+                <div id="tcp_service_time" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">tcp_service_time:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.TcpServiceTime}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.Timestamp}}
+                <div id="timestamp" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">timestamp:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.Timestamp}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UpstreamService}}
+                <div id="upstream_service" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">upstream_service:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UpstreamService}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UpstreamServiceTime}}
+                <div id="upstream_service_time" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">upstream_service_time:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UpstreamServiceTime}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UpstreamCluster}}
+                <div id="upstream_cluster" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">upstream_cluster:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UpstreamCluster}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UpstreamLocal}}
+                <div id="upstream_local" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">upstream_local:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UpstreamLocal}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.DownstreamLocal}}
+                <div id="downstream_local" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">downstream_local:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.DownstreamLocal}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.DownstreamRemote}}
+                <div id="downstream_remote" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">downstream_remote:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.DownstreamRemote}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.RequestedServer}}
+                <div id="requested_server" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">requested_server:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.RequestedServer}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UriParam}}
+                <div id="uri_param" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">uri_param:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UriParam}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UriPath}}
+                <div id="uri_path" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">uri_path:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UriPath}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.UserAgent}}
+                <div id="user_agent" class="replyClick" onClick="reply_click(this.id)">
+                    <span class="keyText">user_agent:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.UserAgent}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.OriginalMessage}}
+                <div id="original_message">
+                    <span class="keyText">original_message:</span>&nbsp;<span
+                        class="valueText">{{.ParesedLog.OriginalMessage}},</span></br>
+                </div>
+                {{end}}
+                {{if .ParesedLog.ParseError}}
+                <span class="keyText">parse_error:</span>&nbsp;<span
+                    class="valueText">{{.ParesedLog.ParseError}},</span></br>
+                {{end}}
+                <span style="color:#ffffff">}</span>
+            </div>
+            {{end}}
+
+        </div>
+        <div class="col">
+
+            <h2>Documentation <a
+                    href="https://www.envoyproxy.io/docs/envoy/latest/configuration/observability/access_log/usage#command-operators"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></h2>
+
+            <div class="card">
+                <div class="card-body">
+                    <div id="docs" class="docs" style="display:none">
+                    </div>
+                    Click on a field to view the documentaion.
+                </div>
+              </div>
+        </div>
+    </div>
+
+    </div>
 </body>
-</html> 
 
+</html>
